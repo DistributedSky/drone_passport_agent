@@ -1,0 +1,13 @@
+<launch>
+  <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
+  <arg name="server_address" default="" />
+  <arg name="certfile" default="" />
+  <arg name="keyfile" default="" />
+
+  <node pkg="aerostate_demo" type="objective_composer" name="objective_composer" output="screen">
+    <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
+    <param name="server_address" value="$(arg server_address)" />
+    <param name="certfile" value="$(arg certfile)" /> <!-- SSL certificate for webserver -->
+    <param name="keyfile" value="$(arg keyfile)" />
+  </node>
+</launch>
