@@ -1,0 +1,12 @@
+<launch>
+  <arg name="web3_http_provider" default="http://127.0.0.1:8545" />
+  <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
+
+  <node pkg="aerostate_demo" type="agent_node" name="agent" output="screen">
+    <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
+    <param name="web3_http_provider" value="$(arg web3_http_provider)" />
+    <param name="model" value="" />
+    <param name="token" value="" />
+    <param name="bid_lifetime" value="10" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+  </node>
+</launch>
