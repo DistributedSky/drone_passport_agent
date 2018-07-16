@@ -5,8 +5,10 @@ from sys import version_info
 if version_info[0] < 3:
     raise Exception('python3 required')
 from robonomics_lighthouse.msg import Ask, Bid
-from std_msgs.msg import String, Bool
+from ethereum_common.msg import Address, UInt256
+from ethereum_common.srv import Approve, ApproveRequest, Accounts, AccountsRequest
 from std_srvs.srv import Empty
+from std_msgs.msg import String, Bool
 try:
     import rospy
 except ImportError as e:
@@ -26,25 +28,38 @@ class Agent:
         self.token = rospy.get_param('~token')
         self.bid_lifetime = rospy.get_param('~bid_lifetime')
         self.web3 = Web3(HTTPProvider(rospy.get_param('~web3_http_provider')))
+
+        rospy.wait_for_service('accounts')
+        self.account = str(rospy.ServiceProxy('accounts', Accounts)(AccountsRequest()))
+        rospy.loginfo('Account: ' + self.account)
+        if rospy.get_param('~approve') == 'y':
+            rospy.wait_for_service('approve')
+            factory = Address(address="0x44CFBcb1Ca0d3df0925dDA3354E955d38d78ad6B")
+            msg = ApproveRequest(spender=factory, value=UInt256(uint256="1"))
+            tx = rospy.ServiceProxy('approve', Approve)(msg)
+            rospy.loginfo('Approved in: ' + str(tx))
         
-        self.signing_bid = rospy.Publisher('lighthouse/infochan/signing/bid', Bid, queue_size=128)
+        self.signing_bid = rospy.Publisher('liability/infochan/signing/bid', Bid, queue_size=128)
         
-        def on_incoming_ask(on_incoming_ask):
+        def on_incoming_ask(incoming_ask):
+            rospy.loginfo('Incoming ask: ' + str(incoming_ask))
             if incoming_ask.model == self.model and incoming_ask.token == self.token:
-                rospy.loginfo('Incoming ask for my model and token.')
-                selfe.make_bid(incoming_ask)
+                rospy.loginfo('For my model and token.')
+                self.make_bid(incoming_ask)
             else:
-                rospy.loginfo('Incoming ask not fits, skip: ' + str(incoming_ask))
-        rospy.Subscriber('infochan/incoming/ask', Ask, on_incoming_ask)
+                rospy.loginfo('Not fits, skip.')
+        rospy.Subscriber('liability/infochan/incoming/ask', Ask, on_incoming_ask)
 
         def on_email(msg):
             self.current_job['email'] = msg.data
-        rosy.Subscriber('~objective/email', String, on_email)
+            rospy.loginfo('Email: ' + msg.data)
+        rospy.Subscriber('~objective/email', String, on_email)
 
         def on_droneid(msg):
             self.current_job['droneid'] = msg.data
             self.current_job['success'] = True
-        rospy.Subscriber('objective/droneid', String, on_droneid)
+            rospy.loginfo('Drone ID: ' + msg.data)
+        rospy.Subscriber('~objective/droneid', String, on_droneid)
 
         self.result_topics = dict()
         self.result_topics['droneid'] = rospy.Publisher('~result/droneid', String, queue_size=10)
@@ -55,9 +70,10 @@ class Agent:
         self.finish = rospy.ServiceProxy('liability/finish', Empty)
 
         threading.Thread(target=self.process, daemon=True).start()
+        rospy.loginfo('Node ' + rospy.get_name() + ' started.')
     
     def make_bid(self, incoming_ask):
-        rosp.loginfo('Making ask...')
+        rospy.loginfo('Making bid...')
 
         bid = Bid()
         bid.model = self.model
@@ -66,7 +82,8 @@ class Agent:
         bid.cost = incoming_ask.cost
         bid.lighthouseFee = 0
         bid.deadline = self.web3.eth.getBlock('latest').number + self.bid_lifetime
-        self.signing_bid(bid)
+        rospy.loginfo(bid)
+        self.signing_bid.publish(bid)
 
     def process(self):
         while True:

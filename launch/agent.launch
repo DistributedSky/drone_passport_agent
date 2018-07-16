@@ -2,11 +2,13 @@
   <arg name="web3_http_provider" default="http://127.0.0.1:8545" />
   <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
 
-  <node pkg="aerostate_demo" type="agent_node" name="agent" output="screen">
+  <node pkg="de-direct" type="agent_node" name="agent" output="screen">
     <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
     <param name="web3_http_provider" value="$(arg web3_http_provider)" />
-    <param name="model" value="" />
-    <param name="token" value="" />
-    <param name="bid_lifetime" value="10" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+    <param name="model" value="QmWXk8D1Fh5XFJvBodcWbwgyw9htjc6FJg8qi1YYEoPnrg"/>
+    <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
+    <param name="token" value="0xc34B089D3Dfe7bdf39a7Cd3D64116b2395dba845" />
+    <param name="bid_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+    <param name="approve" value="n" />
   </node>
 </launch>
