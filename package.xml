@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>de-direct</name>
+  <name>de_direct</name>
   <version>0.0.0</version>
-  <description>The de-direct package</description>
+  <description>The de_direct package</description>
   <maintainer email="alisher@aira.life">Alisher A. Khassanov</maintainer>
   <license>BSD3</license>
 

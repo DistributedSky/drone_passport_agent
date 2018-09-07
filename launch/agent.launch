@@ -2,7 +2,7 @@
   <arg name="web3_http_provider" default="http://127.0.0.1:8545" />
   <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
 
-  <node pkg="de-direct" type="agent_node" name="agent" output="screen">
+  <node pkg="de_direct" type="agent_node" name="agent" output="screen">
     <param name="approve" value="no" />
 
     <param name="smtp_provider" value="smtp.gmail.com" />

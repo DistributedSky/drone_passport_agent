@@ -36,7 +36,7 @@ with shelve.open(per_dir + '/storage.shelve') as db:
     if not 'composed' in db:
         db['composed'] = 0
     if not 'name' in db:
-        db['name'] = 'de-direct'
+        db['name'] = 'de_direct'
 
 tmp_dir = rospy.get_param('~tmp_dir', '/tmp/agent')
 if not os.path.exists(tmp_dir):
