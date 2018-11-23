@@ -14,9 +14,9 @@
     <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
     <param name="web3_http_provider" value="$(arg web3_http_provider)" />
 
-    <param name="model" value="QmWXk8D1Fh5XFJvBodcWbwgyw9htjc6FJg8qi1YYEoPnrg"/>
+    <param name="model" value="QmXs2aHHeCrQEKXxgBHf2Ty24aJayQDfv1BP1tFRWyUzeJ"/>
     <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
     <param name="token" value="0xc34B089D3Dfe7bdf39a7Cd3D64116b2395dba845" />
-    <param name="bid_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+    <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
   </node>
 </launch>
