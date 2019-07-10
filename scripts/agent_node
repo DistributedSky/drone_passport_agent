@@ -80,11 +80,15 @@ class Agent:
         self.result_topics = dict()
         self.result_topics['id_serial'] = rospy.Publisher('result/id_serial', String, queue_size=10)
         self.result_topics['email'] = rospy.Publisher('result/email', String, queue_size=10)
-        self.result_topics['drone_type'] = rospy.Publisher('result/drone_type', String, queue_size=10)
-        self.result_topics['drone_make'] = rospy.Publisher('result/drone_make', String, queue_size=10)
-        self.result_topics['drone_model'] = rospy.Publisher('result/drone_model', String, queue_size=10)
+        self.result_topics['drone_type'] = rospy.Publisher(
+            'result/drone_type', String, queue_size=10)
+        self.result_topics['drone_make'] = rospy.Publisher(
+            'result/drone_make', String, queue_size=10)
+        self.result_topics['drone_model'] = rospy.Publisher(
+            'result/drone_model', String, queue_size=10)
         self.result_topics['id_reg'] = rospy.Publisher('result/id_reg', String, queue_size=10)
-        self.result_topics['pilot_name'] = rospy.Publisher('result/pilot_name', String, queue_size=10)
+        self.result_topics['pilot_name'] = rospy.Publisher(
+            'result/pilot_name', String, queue_size=10)
         self.result_topics['pilot_reg'] = rospy.Publisher('result/pilot_reg', String, queue_size=10)
 
         rospy.wait_for_service('/liability/finish')
@@ -153,32 +157,34 @@ class Agent:
                 rospy.sleep(1)
             rospy.sleep(5)
             rospy.loginfo('Starting process: ' + str(self.current_job))
+
             for param, publisher in self.result_topics.items():
-                publisher.publish(publisher.data_class(
-                    data=self.current_job[param]))
-                rospy.loginfo(publisher.data_class(
-                    data=self.current_job[param]))
+                publisher.publish(publisher.data_class(data=self.current_job[param]))
                 rospy.loginfo(param)
-            self.finish(FinishLiabilityRequest(
-                address=self.liability, success=True))
-            result = rospy.wait_for_message('liability/result', Result)
+                rospy.loginfo(publisher.data_class(data=self.current_job[param]))
+
+            self.finish(FinishLiabilityRequest(address=self.liability, success=True))
+            result = rospy.wait_for_message('/liability/infochan/incoming/result', Result)
             self._send_email(rospy.get_param('~admin_email'),
-                             self.current_job, result.result)  # to admin
+                             self.current_job, result.result.multihash)  # to admin
             # to registrant
-            self._send_email(
-                self.current_job['email'], self.current_job, result.result)
+            self._send_email(self.current_job['email'], self.current_job, result.result.multihash)
             rospy.loginfo('Process complete.')
             self.current_job = dict.fromkeys(self.current_job, None)
             self.liability = None
 
     def _send_email(self, addr: str, job, reg_hash: str):
-        serv = smtplib.SMTP(rospy.get_param('~smtp_provider'),
-                            int(rospy.get_param('~smtp_port')))
-        serv.ehlo()
-        serv.starttls()
-        # serv.ehlo()
-        serv.login(rospy.get_param('~email'),
-                   rospy.get_param('~email_password'))
+        rospy.loginfo("Sending an email to {}".format(addr))
+        try:
+            serv = smtplib.SMTP(rospy.get_param('~smtp_provider'),
+                                int(rospy.get_param('~smtp_port')))
+            serv.ehlo()
+            serv.starttls()
+            # serv.ehlo()
+            serv.login(rospy.get_param('~email'), rospy.get_param('~email_password'))
+        except:
+            rospy.loginfo("Error while sending an email")
+
         reg_link = 'http://ipfs.io/ipfs/' + reg_hash
         liability_link = 'https://etherscan.io/address/{}#readContract'.format(self.liability)
         drone_register_line = "https://drone-employee.com/registration/#/show/{}".format(
@@ -193,6 +199,7 @@ class Agent:
             .format(job['id_serial'], job['email'], liability_link, reg_link, drone_register_line, footer)
         ])
         serv.sendmail(rospy.get_param('~email'), addr, msg)
+        rospy.loginfo("Successfully sent!")
         serv.quit()
 
     def spin(self):
