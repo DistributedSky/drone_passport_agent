@@ -1,22 +1,14 @@
 <launch>
-  <arg name="web3_http_provider" default="http://127.0.0.1:8545" />
-  <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
-
   <node pkg="de_direct" type="agent_node" name="agent" output="screen">
-    <param name="approve" value="no" />
-
     <param name="smtp_provider" value="smtp.gmail.com" />
     <param name="smtp_port" value="587" />
-    <param name="email" value="airadroneregister@gmail.com" /> <!-- Gmail account login -->
-    <param name="email_password" value="" /> <!-- Gmail account password -->
-    <param name="admin_email" value="alisher@aira.life" />
+    <param name="email" value="" /> <!-- Gmail account login -->
+    <param name="email_password" value="" /> <!-- app password -->
+    <param name="admin_email" value="vadim.manaenko@aira.life" />
 
-    <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
-    <param name="web3_http_provider" value="$(arg web3_http_provider)" />
-
-    <param name="model" value="QmXs2aHHeCrQEKXxgBHf2Ty24aJayQDfv1BP1tFRWyUzeJ"/>
+    <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
     <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
-    <param name="token" value="0xc34B089D3Dfe7bdf39a7Cd3D64116b2395dba845" />
+    <param name="token" value="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
     <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
   </node>
 </launch>

@@ -2,25 +2,16 @@
 # -*- coding: utf-8 -*-
 
 # System
-from sys import version_info
-if version_info[0] < 3:
-    raise Exception('python3 required')
 import smtplib
 import threading
-from web3 import Web3, HTTPProvider
 
 # ROS
-try:
-    import rospy
-except ImportError as e:
-    link = 'https://github.com/OTL/cozmo_driver#super-hack-to-run-rospy-from-python3'
-    raise(ImportError('Check ' + link)) from e
-from std_srvs.srv import Empty
-from std_msgs.msg import String, Bool
+import rospy
+from std_msgs.msg import String
 
 # AIRA
-from ethereum_common.msg import Address, UInt256
-from ethereum_common.srv import Approve, ApproveRequest, Accounts, AccountsRequest, BlockNumber
+from ethereum_common.msg import UInt256
+from ethereum_common.srv import BlockNumber
 from ipfs_common.msg import Multihash
 from robonomics_msgs.msg import Demand, Offer, Result
 from robonomics_liability.msg import Liability
@@ -33,15 +24,16 @@ pilot_reg
 self.current_job['success'] = True
 '''
 
+
 class Agent:
-    current_job = {'id_serial':     None,
-                   'email':         None,
-                   'drone_type':    None,
-                   'drone_make':    None,
-                   'drone_model':   None,
-                   'id_reg':        None,
-                   'pilot_name':    None,
-                   'pilot_reg':     None
+    current_job = {'id_serial': None,
+                   'email': None,
+                   'drone_type': None,
+                   'drone_make': None,
+                   'drone_model': None,
+                   'id_reg': None,
+                   'pilot_name': None,
+                   'pilot_reg': None
                    }
     liability = None
 
@@ -51,19 +43,9 @@ class Agent:
         self.model = rospy.get_param('~model')
         self.token = rospy.get_param('~token')
         self.offer_lifetime = rospy.get_param('~offer_lifetime')
-        self.web3 = Web3(HTTPProvider(rospy.get_param('~web3_http_provider')))
 
-        if rospy.get_param('~approve') == 'y':
-            rospy.wait_for_service('accounts')
-            self.account = str(rospy.ServiceProxy('accounts', Accounts)(AccountsRequest()))
-            rospy.loginfo('Account: ' + self.account)
-            rospy.wait_for_service('approve')
-            factory = Address(address="0xBd127854f5F9022B72459ca97EcE166df9B3012D")
-            msg = ApproveRequest(spender=factory, value=UInt256(uint256="1"))
-            tx = rospy.ServiceProxy('approve', Approve)(msg)
-            rospy.loginfo('Approved in: ' + str(tx))
-
-        self.signing_offer = rospy.Publisher('/liability/infochan/eth/signing/offer', Offer, queue_size=128)
+        self.signing_offer = rospy.Publisher(
+            '/liability/infochan/eth/signing/offer', Offer, queue_size=128)
 
         def on_incoming_demand(incoming_demand):
             rospy.loginfo('Incoming demand:\n' + str(incoming_demand))
@@ -72,36 +54,38 @@ class Agent:
                 self.make_offer(incoming_demand)
             else:
                 rospy.loginfo('Not fits, skip.')
-        rospy.Subscriber('/liability/infochan/incoming/demand', Demand, on_incoming_demand)
+        rospy.Subscriber('/liability/infochan/incoming/demand',
+                         Demand, on_incoming_demand)
 
         def on_liability(msg):
             self.liability = msg.address.address
             rospy.loginfo('Liaility addr: ' + self.liability)
 
-            prefix = '/liability/eth_' + self.liability + '/agent/'
+            prefix = '/liability/eth_' + self.liability
 
-            rospy.Subscriber(prefix + 'objective/id_serial', String, self.on_id_serial)
-            rospy.Subscriber(prefix + 'objective/email', String, self.on_email)
-            rospy.Subscriber(prefix + 'objective/drone_type', String, self.on_drone_type)
-            rospy.Subscriber(prefix + 'objective/drone_make', String, self.on_drone_make)
-            rospy.Subscriber(prefix + 'objective/drone_model', String, self.on_drone_model)
-            rospy.Subscriber(prefix + 'objective/id_reg', String, self.on_id_reg)
-            rospy.Subscriber(prefix + 'objective/pilot_name', String, self.on_pilot_name)
-            rospy.Subscriber(prefix + 'objective/pilot_reg', String, self.on_pilot_reg)
+            rospy.Subscriber(prefix + '/id_serial', String, self.on_id_serial)
+            rospy.Subscriber(prefix + '/email', String, self.on_email)
+            rospy.Subscriber(prefix + '/drone_type', String, self.on_drone_type)
+            rospy.Subscriber(prefix + '/drone_make', String, self.on_drone_make)
+            rospy.Subscriber(prefix + '/drone_model', String, self.on_drone_model)
+            rospy.Subscriber(prefix + '/id_reg', String, self.on_id_reg)
+            rospy.Subscriber(prefix + '/pilot_name', String, self.on_pilot_name)
+            rospy.Subscriber(prefix + '/pilot_reg', String, self.on_pilot_reg)
 
             rospy.wait_for_service('/liability/start')
-            rospy.ServiceProxy('/liability/start', StartLiability)(StartLiabilityRequest(address=self.liability))
+            rospy.ServiceProxy('/liability/start',
+                               StartLiability)(StartLiabilityRequest(address=self.liability))
         rospy.Subscriber('/liability/ready', Liability, on_liability)
 
         self.result_topics = dict()
-        self.result_topics['id_serial']     = rospy.Publisher('result/id_serial', String, queue_size=10)
-        self.result_topics['email']         = rospy.Publisher('result/email', String, queue_size=10)
-        self.result_topics['drone_type']    = rospy.Publisher('result/drone_type', String, queue_size=10)
-        self.result_topics['drone_make']    = rospy.Publisher('result/drone_make', String, queue_size=10)
-        self.result_topics['drone_model']   = rospy.Publisher('result/drone_model', String, queue_size=10)
-        self.result_topics['id_reg']        = rospy.Publisher('result/id_reg', String, queue_size=10)
-        self.result_topics['pilot_name']    = rospy.Publisher('result/pilot_name', String, queue_size=10)
-        self.result_topics['pilot_reg']     = rospy.Publisher('result/pilot_reg', String, queue_size=10)
+        self.result_topics['id_serial'] = rospy.Publisher('result/id_serial', String, queue_size=10)
+        self.result_topics['email'] = rospy.Publisher('result/email', String, queue_size=10)
+        self.result_topics['drone_type'] = rospy.Publisher('result/drone_type', String, queue_size=10)
+        self.result_topics['drone_make'] = rospy.Publisher('result/drone_make', String, queue_size=10)
+        self.result_topics['drone_model'] = rospy.Publisher('result/drone_model', String, queue_size=10)
+        self.result_topics['id_reg'] = rospy.Publisher('result/id_reg', String, queue_size=10)
+        self.result_topics['pilot_name'] = rospy.Publisher('result/pilot_name', String, queue_size=10)
+        self.result_topics['pilot_reg'] = rospy.Publisher('result/pilot_reg', String, queue_size=10)
 
         rospy.wait_for_service('/liability/finish')
         self.finish = rospy.ServiceProxy('/liability/finish', FinishLiability)
@@ -141,6 +125,13 @@ class Agent:
         self.current_job['pilot_reg'] = msg.data
         rospy.loginfo('Pilot reg: ' + msg.data)
 
+    def make_deadline(self):
+        rospy.wait_for_service('/eth/current_block')
+        block_srv = rospy.ServiceProxy('/eth/current_block', BlockNumber)
+        deadline = block_srv().number + self.offer_lifetime
+
+        return UInt256(str(deadline))
+
     def make_offer(self, incoming_demand):
         rospy.loginfo('Making offer...')
 
@@ -152,8 +143,7 @@ class Agent:
         offer.validator = incoming_demand.validator
         offer.lighthouse = incoming_demand.lighthouse
         offer.lighthouseFee = UInt256("0")
-        rospy.wait_for_service('/eth/current_block')
-        offer.deadline = UInt256(str(rospy.ServiceProxy('/eth/current_block', BlockNumber)().number + self.offer_lifetime))
+        offer.deadline = self.make_deadline()
         rospy.loginfo(offer)
         self.signing_offer.publish(offer)
 
@@ -164,35 +154,44 @@ class Agent:
             rospy.sleep(5)
             rospy.loginfo('Starting process: ' + str(self.current_job))
             for param, publisher in self.result_topics.items():
-                publisher.publish(publisher.data_class(data=self.current_job[param]))
-                rospy.loginfo(publisher.data_class(data=self.current_job[param]))
+                publisher.publish(publisher.data_class(
+                    data=self.current_job[param]))
+                rospy.loginfo(publisher.data_class(
+                    data=self.current_job[param]))
                 rospy.loginfo(param)
-            self.finish(FinishLiabilityRequest(address=self.liability, success=True))
+            self.finish(FinishLiabilityRequest(
+                address=self.liability, success=True))
             result = rospy.wait_for_message('liability/result', Result)
-            self._send_email(rospy.get_param('~admin_email'), self.current_job, result.result) # to admin
-            self._send_email(self.current_job['email'], self.current_job, result.result) # to registrant
+            self._send_email(rospy.get_param('~admin_email'),
+                             self.current_job, result.result)  # to admin
+            # to registrant
+            self._send_email(
+                self.current_job['email'], self.current_job, result.result)
             rospy.loginfo('Process complete.')
             self.current_job = dict.fromkeys(self.current_job, None)
             self.liability = None
 
     def _send_email(self, addr: str, job, reg_hash: str):
-        serv = smtplib.SMTP(rospy.get_param('~smtp_provider'), int(rospy.get_param('~smtp_port')))
+        serv = smtplib.SMTP(rospy.get_param('~smtp_provider'),
+                            int(rospy.get_param('~smtp_port')))
         serv.ehlo()
         serv.starttls()
-        serv.ehlo()
-        serv.login(rospy.get_param('~email'), rospy.get_param('~email_password'))
+        # serv.ehlo()
+        serv.login(rospy.get_param('~email'),
+                   rospy.get_param('~email_password'))
         reg_link = 'http://ipfs.io/ipfs/' + reg_hash
         liability_link = 'https://etherscan.io/address/{}#readContract'.format(self.liability)
-        drone_register_line = "https://drone-employee.com/registration/#/show/{}".format(self.liability)
+        drone_register_line = "https://drone-employee.com/registration/#/show/{}".format(
+            self.liability)
         footer = '\n--\nBest regards,\nDrone registrating AIRA.'
         msg = '\r\n'.join([
-                           'From: {}'.format(rospy.get_param('~email')),
-                           'To: {}'.format(addr),
-                           'Subject: Drone registration',
-                           '',
-                           'Name {} registered by {} at liability {}. Registration file: {}. Look at the liability at {}.{}'
-                           .format(job['id_serial'], job['email'], liability_link, reg_link, drone_register_line, footer)
-                          ])
+            'From: {}'.format(rospy.get_param('~email')),
+            'To: {}'.format(addr),
+            'Subject: Drone registration',
+            '',
+            'Name {} registered by {} at liability {}. Registration file: {}. Look at the liability at {}.{}'
+            .format(job['id_serial'], job['email'], liability_link, reg_link, drone_register_line, footer)
+        ])
         serv.sendmail(rospy.get_param('~email'), addr, msg)
         serv.quit()
 
