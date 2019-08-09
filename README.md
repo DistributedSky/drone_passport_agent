@@ -33,3 +33,24 @@ $ nix build -f release.nix
 $ source ./result/setup.zsh (bash)
 $ roslaunch de_direct agent.launch
 ```
+
+# NixOS Service
+
+```
+systemd.services.de_direct = {
+      requires = [ "roscore.service" ];
+      after = ["roscore.service" ]; 
+      wantedBy = [ "multi-user.target" ];
+      script = ''
+        source /root/de_direct/result/setup.bash \
+        && roslaunch de_direct agent.launch
+      '';
+      serviceConfig = {
+        Restart = "on-failure";
+        StartLimitInterval = 0;
+        RestartSec = 60;
+        User = "root";
+      };
+    };
+    ```
+```
