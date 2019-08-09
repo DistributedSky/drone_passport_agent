@@ -175,13 +175,18 @@ class Agent:
 
     def _send_email(self, addr: str, job, reg_hash: str):
         rospy.loginfo("Sending an email to {}".format(addr))
+        login = rospy.get_param("~login")
+        email_from = rospy.get_param("~email_from")
+        if not email_from:
+            email_from = login
+
         try:
             serv = smtplib.SMTP(rospy.get_param('~smtp_provider'),
                                 int(rospy.get_param('~smtp_port')))
             serv.ehlo()
             serv.starttls()
             # serv.ehlo()
-            serv.login(rospy.get_param('~email'), rospy.get_param('~email_password'))
+            serv.login(login, rospy.get_param('~email_password'))
         except:
             rospy.loginfo("Error while sending an email")
 
@@ -191,14 +196,14 @@ class Agent:
             self.liability)
         footer = '\n--\nBest regards,\nDrone registrating AIRA.'
         msg = '\r\n'.join([
-            'From: {}'.format(rospy.get_param('~email')),
+            'From: {}'.format(email_from),
             'To: {}'.format(addr),
             'Subject: Drone registration',
             '',
             'Name {} registered by {} at liability {}. Registration file: {}. Look at the liability at {}.{}'
             .format(job['id_serial'], job['email'], liability_link, reg_link, drone_register_line, footer)
         ])
-        serv.sendmail(rospy.get_param('~email'), addr, msg)
+        serv.sendmail(login, addr, msg)
         rospy.loginfo("Successfully sent!")
         serv.quit()
 

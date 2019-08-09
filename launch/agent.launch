@@ -2,7 +2,8 @@
   <node pkg="de_direct" type="agent_node" name="agent" output="screen">
     <param name="smtp_provider" value="smtp.gmail.com" />
     <param name="smtp_port" value="587" />
-    <param name="email" value="" /> <!-- Gmail account login -->
+    <param name="login" value="" /> <!-- Gmail account login -->
+    <param name="email_from" value="" /> <!-- if empty, use login as email from -->
     <param name="email_password" value="" /> <!-- app password -->
     <param name="admin_email" value="vadim.manaenko@aira.life" />
 

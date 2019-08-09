@@ -34,6 +34,6 @@ def get_objective():
 
     return ipfs_response['Hash']
 
+
 if __name__ == '__main__':
     app.run(port=8890)
-
