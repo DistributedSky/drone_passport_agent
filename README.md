@@ -1,6 +1,6 @@
 # de_direct
 
-Drone registration agent. It receives the following fields from [the Dapp](https://drone-employee.com/registration/#/):
+Drone registration agent. It receives the following fields from [the Dapp](https://drone-employee.com/):
 
 * Serial number of the aircraft
 * Operator's contact email
