@@ -16,7 +16,8 @@ Drone registration agent. It receives the following fields from [the Dapp](https
 In `launch/agent.launch` fill in an email and a password
 ```
 ...
-<param name="email" value="airadroneregister@gmail.com" /> <!-- Gmail account login -->
+<param name="login" value="" /> <!-- Gmail account login -->
+<param name="email_from" value="" /> <!-- if it's empty, email_from is equal to login -->
 <param name="email_password" value="" /> <!-- Gmail account password -->
 ...
 ```
