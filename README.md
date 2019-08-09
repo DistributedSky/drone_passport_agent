@@ -52,5 +52,4 @@ systemd.services.de_direct = {
         User = "root";
       };
     };
-    ```
 ```
