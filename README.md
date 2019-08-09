@@ -37,6 +37,8 @@ $ roslaunch de_direct agent.launch
 
 # NixOS Service
 
+To start the service as a system service add the following to `/etc/nixos/configuration.nix`:
+
 ```
 systemd.services.de_direct = {
       requires = [ "roscore.service" ];
@@ -53,4 +55,14 @@ systemd.services.de_direct = {
         User = "root";
       };
     };
+```
+
+and run
+```
+# nixos-rebuild switch
+```
+
+To test the service is up and running:
+```
+# systemctl status de_direct
 ```
