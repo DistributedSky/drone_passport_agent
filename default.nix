@@ -1,6 +1,7 @@
 { stdenv
 , robonomics_comm
 , mkRosPackage
+, pkgs
 }:
 
 mkRosPackage rec {
@@ -10,7 +11,7 @@ mkRosPackage rec {
 
   src = ./.;
 
-  propagatedBuildInputs = [ robonomics_comm ];
+  propagatedBuildInputs = [ robonomics_comm pkgs.python37Packages.flask-restful ];
 
   meta = with stdenv.lib; {
     description = "DE direct";
