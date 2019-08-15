@@ -32,13 +32,16 @@ CORS(app)
 api = Api(app)
 
 per_dir = rospy.get_param('~per_dir', os.path.dirname(os.path.realpath(__file__)))
+if not os.path.exists(per_dir):
+    os.makedirs(per_dir)
+
 with shelve.open(per_dir + '/storage.shelve') as db:
     if not 'composed' in db:
         db['composed'] = 0
     if not 'name' in db:
         db['name'] = 'de_direct'
 
-tmp_dir = rospy.get_param('~tmp_dir', '/tmp/agent')
+tmp_dir = rospy.get_param('~tmp_dir', '/tmp/droneid')
 if not os.path.exists(tmp_dir):
     os.makedirs(tmp_dir)
 
@@ -54,20 +57,27 @@ class ComposeObjective(Resource):
         """request example:
            $ curl -H "Content-type: application/json" \
                   -X POST https://0.0.0.0:8888/ \
-                  -d '{"email":"your@email.com", "droneid":"AL76"}'
+                  -d '{"email":"your@email.com", "droneid":"AL76"...}'
         """
         rospy.loginfo('Composer request for: ' + str(request.get_json()))
-        email = request.get_json()['email']
-        droneid = request.get_json()['droneid']
+
         bag_name = tmp_dir + '/objective-' + next(tempfile._get_candidate_names()) + '.bag'
-        with rosbag.Bag(bag_name, 'w') as bag:
-            bag.write('/agent/objective/email', String(data=email))
-            bag.write('/agent/objective/droneid', String(data=droneid))
+        bag = rosbag.Bag(bag_name, 'w')
+
+        fields = request.get_json()
+
+        for topic, data in fields.items():
+            rospy.loginfo("{}: {}".format(topic, data))
+            bag.write("/{}".format(topic), String(data=data))
+
+        bag.close()
+
         with shelve.open(per_dir + '/storage.shelve') as db:
             db['composed'] += 1
+
         objective_hash = ipfs.add(bag_name)['Hash']
         rospy.loginfo('Objective: ' + objective_hash)
-        return jsonify({'objective': objective_hash})
+        return objective_hash
 
 api.add_resource(Stats, '/stats')
 api.add_resource(ComposeObjective, '/get_objective')
@@ -75,6 +85,5 @@ api.add_resource(ComposeObjective, '/get_objective')
 
 server_address = urlparse(rospy.get_param('~server_address')).netloc.split(':')
 app.run(host=server_address[0],
-        port=int(server_address[1]),
-        ssl_context=(rospy.get_param('~certfile'), rospy.get_param('~keyfile')))
-rospy.spin()
+        port=int(server_address[1]))
+

@@ -192,7 +192,7 @@ class Agent:
 
         reg_link = 'http://ipfs.io/ipfs/' + reg_hash
         liability_link = 'https://etherscan.io/address/{}#readContract'.format(self.liability)
-        drone_register_line = "https://drone-employee.com/registration/#/show/{}".format(
+        drone_register_line = "https://drone-employee.com/#/passport/{}".format(
             self.liability)
         footer = '\n--\nBest regards,\nDrone registrating AIRA.'
         msg = '\r\n'.join([
