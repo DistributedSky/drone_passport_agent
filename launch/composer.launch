@@ -1,13 +1,13 @@
 <launch>
   <arg name="ipfs_http_provider" default="http://127.0.0.1:5001" />
-  <arg name="server_address" default="https://0.0.0.0:8051" />
-  <arg name="certfile" default="/etc/ssl/devjs-01.corp.aira.life/devjs-01.corp.aira.life.cer" />
-  <arg name="keyfile" default="/etc/ssl/devjs-01.corp.aira.life/devjs-01.corp.aira.life.key" />
+  <arg name="server_address" default="http://0.0.0.0:8051" />
 
   <node pkg="de_direct" type="objective_composer" name="objective_composer" output="screen">
     <param name="ipfs_http_provider" value="$(arg ipfs_http_provider)" />
     <param name="server_address" value="$(arg server_address)" />
-    <param name="certfile" value="$(arg certfile)" /> <!-- SSL certificate for webserver -->
-    <param name="keyfile" value="$(arg keyfile)" />
+
+    <!-- default dirs are <install dir>/storage.shelve and /tmp/droneid -->
+    <!-- <param name="per_dir" value="/home/vadim/shelve" /> -->
+    <!-- <param name="tmp_dir" value="/home/vadim/dronid" /> -->
   </node>
 </launch>

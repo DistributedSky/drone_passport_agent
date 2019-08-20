@@ -1,7 +1,7 @@
 { stdenv
-, ros_comm
+, robonomics_comm
 , mkRosPackage
-, python3Packages
+, pkgs
 }:
 
 mkRosPackage rec {
@@ -11,8 +11,7 @@ mkRosPackage rec {
 
   src = ./.;
 
-  propagatedBuildInputs = with python3Packages;
-  [ ros_comm web3 multihash voluptuous ipfsapi ];
+  propagatedBuildInputs = [ robonomics_comm pkgs.python37Packages.flask-restful ];
 
   meta = with stdenv.lib; {
     description = "DE direct";
