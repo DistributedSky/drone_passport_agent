@@ -63,14 +63,16 @@ class Agent:
 
             prefix = '/liability/eth_' + self.liability
 
-            rospy.Subscriber(prefix + '/id_serial', String, self.on_id_serial)
-            rospy.Subscriber(prefix + '/email', String, self.on_email)
-            rospy.Subscriber(prefix + '/drone_type', String, self.on_drone_type)
-            rospy.Subscriber(prefix + '/drone_make', String, self.on_drone_make)
-            rospy.Subscriber(prefix + '/drone_model', String, self.on_drone_model)
-            rospy.Subscriber(prefix + '/id_reg', String, self.on_id_reg)
-            rospy.Subscriber(prefix + '/pilot_name', String, self.on_pilot_name)
-            rospy.Subscriber(prefix + '/pilot_reg', String, self.on_pilot_reg)
+            self.subscribers = []
+
+            self.subscribers.append(rospy.Subscriber(prefix + '/id_serial', String, self.on_id_serial))
+            self.subscribers.append(rospy.Subscriber(prefix + '/email', String, self.on_email))
+            self.subscribers.append(rospy.Subscriber(prefix + '/drone_type', String, self.on_drone_type))
+            self.subscribers.append(rospy.Subscriber(prefix + '/drone_make', String, self.on_drone_make))
+            self.subscribers.append(rospy.Subscriber(prefix + '/drone_model', String, self.on_drone_model))
+            self.subscribers.append(rospy.Subscriber(prefix + '/id_reg', String, self.on_id_reg))
+            self.subscribers.append(rospy.Subscriber(prefix + '/pilot_name', String, self.on_pilot_name))
+            self.subscribers.append(rospy.Subscriber(prefix + '/pilot_reg', String, self.on_pilot_reg))
 
             rospy.wait_for_service('/liability/start')
             rospy.ServiceProxy('/liability/start',
@@ -162,6 +164,13 @@ class Agent:
                 publisher.publish(publisher.data_class(data=self.current_job[param]))
                 rospy.loginfo(param)
                 rospy.loginfo(publisher.data_class(data=self.current_job[param]))
+<<<<<<< HEAD
+=======
+                publisher.unregister()
+
+            for sub in self.subscribers:
+                sub.unregister()
+>>>>>>> 01cc072329f066939cb2b78c68465f75dc479665
 
             self.finish(FinishLiabilityRequest(address=self.liability, success=True))
             result = rospy.wait_for_message('/liability/infochan/incoming/result', Result)
