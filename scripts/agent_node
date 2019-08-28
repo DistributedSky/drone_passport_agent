@@ -58,6 +58,10 @@ class Agent:
                          Demand, on_incoming_demand)
 
         def on_liability(msg):
+            if msg.model.multihash != rospy.get_param('~model'):
+                rospy.loginfo("The liability is not for me")
+                return
+
             self.liability = msg.address.address
             rospy.loginfo('Liaility addr: ' + self.liability)
 
@@ -164,13 +168,10 @@ class Agent:
                 publisher.publish(publisher.data_class(data=self.current_job[param]))
                 rospy.loginfo(param)
                 rospy.loginfo(publisher.data_class(data=self.current_job[param]))
-<<<<<<< HEAD
-=======
                 publisher.unregister()
 
             for sub in self.subscribers:
                 sub.unregister()
->>>>>>> 01cc072329f066939cb2b78c68465f75dc479665
 
             self.finish(FinishLiabilityRequest(address=self.liability, success=True))
             result = rospy.wait_for_message('/liability/infochan/incoming/result', Result)
