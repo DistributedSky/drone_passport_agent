@@ -58,6 +58,10 @@ class Agent:
                          Demand, on_incoming_demand)
 
         def on_liability(msg):
+            if msg.model.multihash != rospy.get_param('~model'):
+                rospy.loginfo("The liability is not for me")
+                return
+
             self.liability = msg.address.address
             rospy.loginfo('Liaility addr: ' + self.liability)
 
