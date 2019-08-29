@@ -1,15 +1,20 @@
 <launch>
-  <node pkg="de_direct" type="agent_node" name="agent" output="screen">
-    <param name="smtp_provider" value="smtp.gmail.com" />
-    <param name="smtp_port" value="587" />
-    <param name="login" value="" /> <!-- Gmail account login -->
-    <param name="email_from" value="" /> <!-- if empty, use login as email from -->
-    <param name="email_password" value="" /> <!-- app password -->
-    <param name="admin_email" value="vadim.manaenko@aira.life" />
+    <arg name="login" default="" />
+    <arg name="email_from" default="" />
+    <arg name="email_password" default="" />
+    <arg name="token" default="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
 
-    <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
-    <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
-    <param name="token" value="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
-    <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
-  </node>
+    <node pkg="de_direct" type="agent_node" name="agent" output="screen">
+        <param name="smtp_provider" value="smtp.gmail.com" />
+        <param name="smtp_port" value="587" />
+        <param name="login" value="$(arg login)" /> <!-- Gmail account login -->
+        <param name="email_from" value="" /> <!-- if empty, use login as email from -->
+        <param name="email_password" value="" /> <!-- app password -->
+        <param name="admin_email" value="vadim.manaenko@aira.life" />
+
+        <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
+        <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
+        <param name="token" value="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
+        <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+    </node>
 </launch>
