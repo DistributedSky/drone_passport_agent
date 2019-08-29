@@ -168,20 +168,26 @@ class Agent:
                 publisher.publish(publisher.data_class(data=self.current_job[param]))
                 rospy.loginfo(param)
                 rospy.loginfo(publisher.data_class(data=self.current_job[param]))
-                publisher.unregister()
-
-            for sub in self.subscribers:
-                sub.unregister()
 
             self.finish(FinishLiabilityRequest(address=self.liability, success=True))
             result = rospy.wait_for_message('/liability/infochan/incoming/result', Result)
+
             self._send_email(rospy.get_param('~admin_email'),
                              self.current_job, result.result.multihash)  # to admin
             # to registrant
             self._send_email(self.current_job['email'], self.current_job, result.result.multihash)
+            self.clean()
             rospy.loginfo('Process complete.')
-            self.current_job = dict.fromkeys(self.current_job, None)
-            self.liability = None
+
+    def clean(self):
+        for param, publisher in self.result_topics.items():
+            publisher.unregister()
+
+        for sub in self.subscribers:
+            sub.unregister()
+
+        self.current_job = dict.fromkeys(self.current_job, None)
+        self.liability = None
 
     def _send_email(self, addr: str, job, reg_hash: str):
         rospy.loginfo("Sending an email to {}".format(addr))
