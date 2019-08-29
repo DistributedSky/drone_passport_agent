@@ -8,8 +8,8 @@
         <param name="smtp_provider" value="smtp.gmail.com" />
         <param name="smtp_port" value="587" />
         <param name="login" value="$(arg login)" /> <!-- Gmail account login -->
-        <param name="email_from" value="" /> <!-- if empty, use login as email from -->
-        <param name="email_password" value="" /> <!-- app password -->
+        <param name="email_from" value="$(arg email_from)" /> <!-- if empty, use login as email from -->
+        <param name="email_password" value="$(arg email_password)" /> <!-- app password -->
         <param name="admin_email" value="vadim.manaenko@aira.life" />
 
         <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
