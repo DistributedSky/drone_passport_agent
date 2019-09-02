@@ -7,7 +7,7 @@
 mkRosPackage rec {
   name = "${pname}-${version}";
   pname = "de_direct";
-  version = "master";
+  version = "0.1.0";
 
   src = ./.;
 
@@ -15,7 +15,7 @@ mkRosPackage rec {
 
   meta = with stdenv.lib; {
     description = "DE direct";
-    homepage = http://github.com/vourhey/de_direct;
+    homepage = http://github.com/DroneEmployee/de_direct;
     license = licenses.bsd3;
     maintainers = [ maintainers.vourhey ];
   };

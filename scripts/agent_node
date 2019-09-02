@@ -20,14 +20,6 @@ from robonomics_liability.srv import *
 # This package
 from de_direct.ipfs_utils import ipfs_download
 
-'''
-
-pilot_reg
-
-self.current_job['success'] = True
-'''
-
-
 class Agent:
     liability = None
 
