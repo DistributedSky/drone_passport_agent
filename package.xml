@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>de_direct</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>The de_direct package</description>
-  <maintainer email="alisher@aira.life">Alisher A. Khassanov</maintainer>
+  <author>Vadim Manaenko</author>
+  <maintainer email="vadim.razorq@gmail.com">Vadim Manaenko</maintainer>
   <license>BSD3</license>
 
   <buildtool_depend>catkin</buildtool_depend>

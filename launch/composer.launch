@@ -7,7 +7,7 @@
     <param name="server_address" value="$(arg server_address)" />
 
     <!-- default dirs are <install dir>/storage.shelve and /tmp/droneid -->
-    <!-- <param name="per_dir" value="/home/vadim/shelve" /> -->
-    <!-- <param name="tmp_dir" value="/home/vadim/dronid" /> -->
+    <!-- <param name="per_dir" value="shelve" /> -->
+    <!-- <param name="tmp_dir" value="dronid" /> -->
   </node>
 </launch>
