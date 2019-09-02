@@ -1,4 +1,10 @@
-# de_direct
+# ROS-enabled drone passport agent
+Example of drone passport registration mechanism based on web3 technologies - Ethereum, IPFS and Robonomics network.
+
+Watch demo on Youtube: [Drone Passport dapp on Ethereum Blockchain](https://youtu.be/LFE_ZJdZCmo) or [Drone Passport agent in action. Terminal view](https://youtu.be/yxGTOkGkBJ8)
+
+## About Distributed Sky project
+In order to organize drone operations efficiently, we need to make sure that vehicles have a trusted environment to exchange data and record transactions. 
 
 Drone registration agent. It receives the following fields from [the Dapp](https://drone-employee.com/):
 
@@ -11,7 +17,8 @@ Drone registration agent. It receives the following fields from [the Dapp](https
 * Manufacturer of the drone
 * Model of the drone
 
-# Pre-setup
+## ROS package details 
+### Pre-setup
 
 In `launch/agent.launch` fill in an email and a password
 ```
@@ -23,13 +30,13 @@ In `launch/agent.launch` fill in an email and a password
 ```
 You can specify some addresses in the `launch/composer.launch` file
 
-# Build
+### Build
 
 ```
 $ nix build -f release.nix
 ```
 
-# Launch
+### Launch
 
 To launch main agent run:
 ```
@@ -42,7 +49,7 @@ The composer node is launched via:
 $ roslaunch de_direct composer.launch
 ```
 
-# NixOS Service
+### NixOS Service
 
 To start the service as a system service add the following to `/etc/nixos/configuration.nix`:
 
