@@ -6,8 +6,8 @@
 
 mkRosPackage rec {
   name = "${pname}-${version}";
-  pname = "de_direct";
-  version = "0.1.0";
+  pname = "drone_passport_agent";
+  version = "0.2.0";
 
   src = ./.;
 
@@ -15,7 +15,7 @@ mkRosPackage rec {
 
   meta = with stdenv.lib; {
     description = "DE direct";
-    homepage = http://github.com/DroneEmployee/de_direct;
+    homepage = http://github.com/DroneEmployee/drone_passport_agent;
     license = licenses.bsd3;
     maintainers = [ maintainers.vourhey ];
   };

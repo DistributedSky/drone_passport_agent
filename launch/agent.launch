@@ -13,8 +13,7 @@
         <param name="admin_email" value="vadim.manaenko@aira.life" />
 
         <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
-        <!-- <param name="token" value="0x3cBAF1d511Adf5098511B5c5B39e1F1b506C1AFE" />  XRT-->
-        <param name="token" value="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
+        <param name="token" value="$(arg token)" />
         <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
     </node>
 </launch>

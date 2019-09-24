@@ -87,7 +87,7 @@ class Agent:
         offer.model = Multihash(multihash=self.model)
         offer.objective = incoming_demand.objective
         offer.token = incoming_demand.token
-        offer.cost = UInt256("0")
+        offer.cost = incoming_demand.cost
         offer.validator = incoming_demand.validator
         offer.lighthouse = incoming_demand.lighthouse
         offer.lighthouseFee = UInt256("0")
