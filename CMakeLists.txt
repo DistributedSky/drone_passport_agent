@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(de_direct)
+project(drone_passport_agent)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy

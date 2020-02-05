@@ -4,7 +4,7 @@
     <arg name="email_password" default="" />
     <arg name="token" default="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
 
-    <node pkg="de_direct" type="agent_node" name="agent" output="screen">
+    <node pkg="drone_passport_agent" type="agent_node" name="agent" output="screen">
         <param name="smtp_provider" value="smtp.gmail.com" />
         <param name="smtp_port" value="587" />
         <param name="login" value="$(arg login)" /> <!-- Gmail account login -->
