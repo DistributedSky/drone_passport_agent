@@ -46,8 +46,8 @@ class Agent:
                 rospy.loginfo("The liability is not for me")
                 return
 
-            self.liability = msg.address.address
-            rospy.loginfo('Liaility addr: ' + self.liability)
+            self.liability = msg.address
+            rospy.loginfo('Liaility addr: ' + self.liability.address)
 
             rospy.wait_for_service('/liability/start')
             rospy.ServiceProxy('/liability/start', StartLiability)(StartLiabilityRequest(address=self.liability))

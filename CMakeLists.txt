@@ -18,7 +18,7 @@ include_directories(
 catkin_install_python(
     PROGRAMS
         scripts/agent_node
-		scripts/objective_composer
+        scripts/objective_composer
     DESTINATION
         ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
@@ -26,7 +26,7 @@ catkin_install_python(
 install(
     FILES
         launch/agent.launch
-		launch/composer.launch
+        launch/composer.launch
     DESTINATION
         ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
