@@ -20,6 +20,9 @@ from robonomics_liability.srv import *
 # This package
 from de_direct.ipfs_utils import ipfs_download
 
+from pinatapy import PinataPy
+
+
 class Agent:
     liability = None
 
@@ -29,6 +32,16 @@ class Agent:
         self.model = rospy.get_param('~model')
         self.token = rospy.get_param('~token')
         self.offer_lifetime = rospy.get_param('~offer_lifetime')
+
+        pinata_api_key = rospy.get_param("~pinata_api_key")
+        pinata_secret_api_key = rospy.get_param("~pinata_secret_api_key")
+
+        rospy.Subscriber("/liability/infochan/eth/sending/result", Result, self.pin_result)
+
+        if pinata_api_key == "" or pinata_secret_api_key == "":
+            self.pinata = None
+        else:
+            self.pinata = PinataPy(rospy.get_param("~pinata_api_key"), rospy.get_param("~pinata_secret_api_key"))
 
         self.signing_offer = rospy.Publisher('/liability/infochan/eth/signing/offer', Offer, queue_size=128)
 
@@ -72,6 +85,10 @@ class Agent:
         rospy.wait_for_service('/liability/finish')
         self.finish = rospy.ServiceProxy('/liability/finish', FinishLiability)
         rospy.loginfo('Node ' + rospy.get_name() + ' started.')
+
+    def pin_result(self, result: Result):
+        if self.pinata is not None:
+            self.pinata.add_hash_to_pin_queue(result.result.multihash)
 
     def make_deadline(self):
         rospy.wait_for_service('/eth/current_block')

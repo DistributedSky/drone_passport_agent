@@ -4,6 +4,9 @@
     <arg name="email_password" default="" />
     <arg name="token" default="0x6B175474E89094C44Da98b954EedeAC495271d0F" />
 
+    <arg name="pinata_api_key" default="" />
+    <arg name="pinata_secret_api_key" default="" />
+
     <node pkg="drone_passport_agent" type="agent_node" name="agent" output="screen">
         <param name="smtp_provider" value="smtp.gmail.com" />
         <param name="smtp_port" value="587" />
@@ -15,5 +18,8 @@
         <param name="model" value="QmYVEPMfzSf2GXhA2heLrnhr931xmnXBEfy79Zrk9Aeskv"/>
         <param name="token" value="$(arg token)" />
         <param name="offer_lifetime" value="100" /> <!-- Ethereum blocks lifetime, ~12-15 sec for one -->
+
+        <param name="pinata_api_key" value="$(arg pinata_api_key)" />
+        <param name="pinata_secret_api_key" value="$(arg pinata_secret_api_key)" />
     </node>
 </launch>
