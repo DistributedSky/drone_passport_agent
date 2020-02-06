@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>drone_passport_agent</name>
-  <version>0.2.2</version>
+  <version>0.2.3</version>
   <description>The de_direct package</description>
   <author>Vadim Manaenko</author>
   <maintainer email="vadim.razorq@gmail.com">Vadim Manaenko</maintainer>

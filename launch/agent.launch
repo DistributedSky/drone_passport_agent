@@ -2,7 +2,7 @@
     <arg name="login" default="" />
     <arg name="email_from" default="" />
     <arg name="email_password" default="" />
-    <arg name="token" default="0x966EbbFD7ECbCF44b1e05341976e0652CFA01360" />
+    <arg name="token" default="0x6B175474E89094C44Da98b954EedeAC495271d0F" />
 
     <node pkg="drone_passport_agent" type="agent_node" name="agent" output="screen">
         <param name="smtp_provider" value="smtp.gmail.com" />

@@ -111,8 +111,8 @@ class Agent:
         except:
             rospy.loginfo("Error while sending an email")
 
-        liability_link = 'https://etherscan.io/address/{}#readContract'.format(self.liability)
-        drone_register_line = "https://drone-employee.com/#/passport/{}".format(self.liability)
+        liability_link = 'https://etherscan.io/address/{}#readContract'.format(self.liability.address)
+        drone_register_line = "https://drone-employee.com/#/passport/{}".format(self.liability.address)
         footer = '\n--\nBest regards,\nDrone registrating AIRA.'
         msg = '\r\n'.join([
             'From: {}'.format(email_from),
