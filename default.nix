@@ -13,8 +13,10 @@ mkRosPackage rec {
 
   propagatedBuildInputs = [
     robonomics_comm
-    pkgs.python37Packages.flask-restful
-    pkgs.python37Packages.pinatapy
+    pkgs.python3Packages.flask-restful
+    pkgs.python3Packages.pinatapy
+    pkgs.python3Packages.empy
+    pkgs.python3Packages.ipfshttpclient
   ];
 
   meta = with stdenv.lib; {
