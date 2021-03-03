@@ -2,7 +2,7 @@ import os
 import rospy
 from shutil import move
 from tempfile import gettempdir, NamedTemporaryFile
-from ipfsapi import connect
+from ipfshttpclient import connect
 from rosbag import Bag
 
 def ipfs_download_txt_file(ipfs_hash: str) -> str:

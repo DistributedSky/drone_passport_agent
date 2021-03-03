@@ -41,12 +41,12 @@ $ nix build -f release.nix
 To launch main agent run:
 ```
 $ source ./result/setup.zsh (bash)
-$ roslaunch de_direct agent.launch
+$ roslaunch drone_passport_agent agent.launch
 ```
 
 The composer node is launched via:
 ```
-$ roslaunch de_direct composer.launch
+$ roslaunch drone_passport_agent composer.launch
 ```
 
 ### NixOS Service
