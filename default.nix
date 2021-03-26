@@ -1,5 +1,5 @@
 { stdenv
-, robonomics_comm
+, robonomics_comm-nightly
 , mkRosPackage
 , pkgs
 }:
@@ -12,7 +12,7 @@ mkRosPackage rec {
   src = ./.;
 
   propagatedBuildInputs = [
-    robonomics_comm
+    robonomics_comm-nightly
     pkgs.python3Packages.flask-restful
     pkgs.python3Packages.pinatapy
     pkgs.python3Packages.empy

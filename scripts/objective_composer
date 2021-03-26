@@ -11,7 +11,7 @@ except ImportError as e:
     link = 'https://github.com/OTL/cozmo_driver#super-hack-to-run-rospy-from-python3'
     raise(ImportError('Check ' + link)) from e
 from std_msgs.msg import String
-import ipfsapi
+import ipfshttpclient
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask.json import jsonify

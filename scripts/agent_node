@@ -18,7 +18,8 @@ from robonomics_liability.msg import Liability
 from robonomics_liability.srv import *
 
 # This package
-from de_direct.ipfs_utils import ipfs_download
+# from de_direct.ipfs_utils import ipfs_download
+from ipfs_common.ipfs_rosbag import IpfsRosBag
 
 from pinatapy import PinataPy
 
